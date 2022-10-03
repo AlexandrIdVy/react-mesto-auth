@@ -1,0 +1,23 @@
+.profile {
+  width: 100%;
+  margin: 40px auto;
+  padding: 0;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 120px minmax(282px, 366px) 1fr;
+  grid-template-areas:
+  "avatar profile button";
+}
+
+@media  screen and (max-width: 768px) {
+  .profile {
+    margin: 42px auto;
+    justify-items: center;
+    grid-template-columns: minmax(282px, 1fr);
+    grid-template-areas:
+    "avatar"
+    "profile"
+    "button";
+    gap: 26px;
+  }
+}

@@ -1,0 +1,19 @@
+.profile__info-edit-btn {
+  position: absolute;
+  top: 15px;
+  right: 0;
+  min-width: 24px;
+  min-height: 24px;
+  border: 1px solid #FFFFFF;
+  background-color: #000000;
+  background-image: url(../../../images/pencil.svg);
+}
+
+@media  screen and (max-width: 768px) {
+  .profile__info-edit-btn {
+    top: 8px;
+    right: 19px;
+    min-width: 18px;
+    min-height: 18px;
+  }
+}

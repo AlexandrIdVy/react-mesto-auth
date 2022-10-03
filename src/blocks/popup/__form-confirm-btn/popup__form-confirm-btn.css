@@ -1,0 +1,21 @@
+.popup__form-confirm-btn {
+  margin: 18px 0 0 0;
+  width: 100%;
+  height: 50px;
+  border-radius: 2px;
+  background-color: #000000;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  color: #FFFFFF;
+  border: none;
+}
+
+@media screen and (max-width: 768px) {
+  .popup__form-confirm-btn {
+    margin: 15px 0 0 0;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}

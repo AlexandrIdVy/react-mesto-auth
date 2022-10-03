@@ -1,0 +1,8 @@
+.place__like-btn {
+  min-width: 22px;
+  min-height: 19px;
+  border: none;
+  background-color: transparent;
+  background-image: url(../../../images/like.svg);
+  background-size: contain;
+}

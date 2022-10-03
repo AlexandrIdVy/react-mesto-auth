@@ -1,0 +1,15 @@
+.place__trash-btn {
+  min-width: 18px;
+  min-height: 19px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: none;
+  background-color: transparent;
+  background-image: url(../../../images/Trash.svg);
+  background-size: contain;
+}
+
+.place__trash-btn:disabled {
+  display: none;
+}
