@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import api from "../utils/Api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { CardsContext } from '../contexts/CardsContext';
@@ -11,6 +12,10 @@ import ImagePopup from "./ImagePopup";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import ProtectedRoute from "./ProtectedRoute";
+import Login from "./Login";
+import Register from "./Register";
+import * as Auth from '../Auth.js';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -20,6 +25,14 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({name: '', link: ''});
   const [currentUser, setСurrentUser] = useState({name: '', about: '', avatar: ''});
   const [cards, setCards] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState({email: ''});
+
+  const history = useHistory();
+
+  useEffect(() => {
+    tokenCheck();
+  }, []);
 
   useEffect(() => {
     Promise.all([api.getUserMe(), api.getInitialCards()])
@@ -110,42 +123,93 @@ function App() {
       .catch(err => console.log(err));
   }
 
+  function handleSignIn(password, email) {
+    return Auth.authorize(password, email)
+      .then((data) => {
+        if (!data.jwt) throw new Error('Missing jwt');
+
+        localStorage.setItem('jwt', data.jwt);
+        setLoggedIn(true);
+        setEmail({email: data.user.email});
+        history.push('/');
+      });
+  }
+
+  function handleRegister(password, email) {
+    return Auth.register(password, email).then(() => {
+      history.push('/signin');
+    });
+  };
+
+  function handleSignOut() {
+    localStorage.removeItem('jwt');
+    setLoggedIn(false);
+    history.push('/signin');
+  }
+
+  function tokenCheck() {
+    const jwt = localStorage.getItem('jwt');
+
+    if (!jwt) return;
+
+    Auth.getContent(jwt).then((data) => {
+      setLoggedIn(true);
+      setEmail({email: data.email});
+      history.push("/");
+    });
+  }
+
   return (
     <div className="page">
       <Header />
-      <CurrentUserContext.Provider value={currentUser}>
-        <CardsContext.Provider value={cards}>
-          <Main
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
+      <Switch>
+        <Route path="/signin">
+          <Login onLogin={handleSignIn} />
+        </Route>
+        <Route path="/signup">
+          <Register onRegister={handleRegister} />
+        </Route>
+        <ProtectedRoute path="/" loggedIn={loggedIn}>
+          <CurrentUserContext.Provider value={currentUser}>
+            <CardsContext.Provider value={cards}>
+              <Main
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
+                onCardClick={handleCardClick}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+                email={email}
+                onSignOut={handleSignOut}
+              />
+
+          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
+
+          <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+
+          <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+
+          <PopupWithForm
+            name={'confirm'}
+            title={'Вы уверены?'}
+            buttonText={'Да'}
+            isOpen={isConfirmPopupOpen}
+            onClose={closeAllPopups}
+          >
+            <PopupConfirm />
+          </PopupWithForm>
+          <ImagePopup
+            card={selectedCard}
+            onClose={closeAllPopups}
           />
+          </CardsContext.Provider>
+          </CurrentUserContext.Provider>
+        </ProtectedRoute>
+        <Route>
+          {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
+        </Route>
+      </Switch>
       <Footer />
-
-      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
-
-      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
-
-      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-
-      <PopupWithForm
-        name={'confirm'}
-        title={'Вы уверены?'}
-        buttonText={'Да'}
-        isOpen={isConfirmPopupOpen}
-        onClose={closeAllPopups}
-      >
-        <PopupConfirm />
-      </PopupWithForm>
-      <ImagePopup
-        card={selectedCard}
-        onClose={closeAllPopups}
-      />
-      </CardsContext.Provider>
-      </CurrentUserContext.Provider>
     </div>
   );
 }
