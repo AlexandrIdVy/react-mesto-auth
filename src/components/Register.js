@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Register = ({ onRegister }) => {
+function Register({ onRegister }) {
+
   const [state, setState] = useState({
     email: '',
     password: '',
     message: ''
   });
 
-  const handleChange = (e) => {
+  function handleChange(e) {
     const {name, value} = e.target;
     setState({
       ...state,
       [name]: value
     });
-  };
+  }
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
     const { password, email } = state;
 
@@ -32,18 +33,16 @@ const Register = ({ onRegister }) => {
 
   return(
     <div className="register">
-      <p className="register__welcome">
-        Пожалуйста, зарегистрируйтесь.
-      </p>
+
       <p className="register__error">
         {state.message}
       </p>
       <form onSubmit={handleSubmit} className="register__form">
-        <label for="email">
+        <label htmlFor="email">
           Email:
         </label>
         <input id="email" name="email" type="email" value={state.email} onChange={handleChange} />
-        <label for="password">
+        <label htmlFor="password">
           Пароль:
         </label>
         <input id="password" name="password" type="password" value={state.password} onChange={handleChange} />
@@ -53,7 +52,7 @@ const Register = ({ onRegister }) => {
       </form>
       <div className="register__signin">
         <p>Уже зарегистрированы?</p>
-        <Link to="/signin" className="register__login-link">Войти</Link>
+        <Link to="/signin">Войти</Link>
       </div>
     </div>
   );

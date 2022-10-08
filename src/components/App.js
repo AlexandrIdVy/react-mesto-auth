@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Route, Switch, Redirect, useHistory } from "react-router-dom";
-import api from "../utils/Api";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import React, { useEffect, useState } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
+import api from '../utils/Api';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { CardsContext } from '../contexts/CardsContext';
-import Footer from "./Footer";
-import Header from "./Header";
-import Main from "./Main";
-import PopupWithForm from "./PopupWithForm";
-import PopupConfirm from "./PopupConfirm";
-import ImagePopup from "./ImagePopup";
-import EditProfilePopup from "./EditProfilePopup";
-import EditAvatarPopup from "./EditAvatarPopup";
-import AddPlacePopup from "./AddPlacePopup";
-import ProtectedRoute from "./ProtectedRoute";
-import Login from "./Login";
-import Register from "./Register";
+import Footer from './Footer';
+import Header from './Header';
+import Main from './Main';
+import PopupWithForm from './PopupWithForm';
+import PopupConfirm from './PopupConfirm';
+import ImagePopup from './ImagePopup';
+import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
+import ProtectedRoute from './ProtectedRoute';
+import Login from './Login';
+import Register from './Register';
 import * as Auth from '../Auth.js';
 
 function App() {
@@ -26,13 +26,21 @@ function App() {
   const [currentUser, setСurrentUser] = useState({name: '', about: '', avatar: ''});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [email, setEmail] = useState({email: ''});
+  const [userData, setUserData] = useState({email: ''});
 
   const history = useHistory();
 
   useEffect(() => {
-    tokenCheck();
-  }, []);
+      const jwt = localStorage.getItem('jwt');
+
+      if (!jwt) return;
+
+      Auth.getContent(jwt).then((data) => {
+        setLoggedIn(true);
+        setUserData({email: data.data.email});
+        history.push("/")
+      });
+  }, [history]);
 
   useEffect(() => {
     Promise.all([api.getUserMe(), api.getInitialCards()])
@@ -125,51 +133,38 @@ function App() {
 
   function handleSignIn(password, email) {
     return Auth.authorize(password, email)
-      .then((data) => {
-        if (!data.jwt) throw new Error('Missing jwt');
+            .then((data) => {
+              if (!data.token) throw new Error('Отсутсвует токен для входа');
 
-        localStorage.setItem('jwt', data.jwt);
-        setLoggedIn(true);
-        setEmail({email: data.user.email});
-        history.push('/');
-      });
+              localStorage.setItem('jwt', data.token);
+              setLoggedIn(true);
+              history.push("/");
+            });
   }
 
   function handleRegister(password, email) {
     return Auth.register(password, email).then(() => {
-      history.push('/signin');
+      history.push("/signin");
     });
-  };
+  }
 
   function handleSignOut() {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
-    history.push('/signin');
-  }
-
-  function tokenCheck() {
-    const jwt = localStorage.getItem('jwt');
-
-    if (!jwt) return;
-
-    Auth.getContent(jwt).then((data) => {
-      setLoggedIn(true);
-      setEmail({email: data.email});
-      history.push("/");
-    });
+    history.push("/signin");
   }
 
   return (
     <div className="page">
       <Header />
       <Switch>
-        <Route path="/signin">
-          <Login onLogin={handleSignIn} />
-        </Route>
         <Route path="/signup">
           <Register onRegister={handleRegister} />
         </Route>
-        <ProtectedRoute path="/" loggedIn={loggedIn}>
+        <Route path="/signin">
+          <Login onLogin={handleSignIn} />
+        </Route>
+        <ProtectedRoute exact path="/" loggedIn={loggedIn}>
           <CurrentUserContext.Provider value={currentUser}>
             <CardsContext.Provider value={cards}>
               <Main
@@ -179,7 +174,7 @@ function App() {
                 onCardClick={handleCardClick}
                 onCardLike={handleCardLike}
                 onCardDelete={handleCardDelete}
-                email={email}
+                onUserData={userData}
                 onSignOut={handleSignOut}
               />
 
@@ -205,10 +200,7 @@ function App() {
           </CardsContext.Provider>
           </CurrentUserContext.Provider>
         </ProtectedRoute>
-        <Route>
-          {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
-        </Route>
-      </Switch>
+        </Switch>
       <Footer />
     </div>
   );

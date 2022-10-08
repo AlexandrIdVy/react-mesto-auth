@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Login = ({ onLogin }) => {
+function Login({ onLogin }) {
+
   const [state, setState] = useState({
     email: '',
     password: '',
     message: ''
   });
 
-  const handleChange = (e) => {
+  function handleChange(e) {
     const {name, value} = e.target;
     setState({
       ...state,
       [name]: value
     });
-  };
+  }
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    const { email, password } = state;
+    const { password, email } = state;
 
-    if (!email || !password) return;
+    if (!password || !email) return;
 
-    onLogin(email, password)
+    onLogin(password, email)
       .catch(err => {
         console.log(err);
         setState({
@@ -30,24 +31,19 @@ const Login = ({ onLogin }) => {
           message: 'Что-то пошло не так!'
         })
       });
-  };
+  }
 
   return(
     <div onSubmit={handleSubmit} className="login">
-
-      <p className="login__welcome">
-        Это приложение содержит конфиденциальную информацию.
-        Пожалуйста, войдите или зарегистрируйтесь, чтобы получить доступ к CryptoDucks.
-      </p>
       <p className="login__error">
         {state.message}
       </p>
       <form className="login__form">
-        <label for="email">
+        <label htmlFor="email">
           Email:
         </label>
         <input id="email" required name="email" type="email" value={state.email} onChange={handleChange} />
-        <label for="password">
+        <label htmlFor="password">
           Пароль:
         </label>
         <input id="password" required name="password" type="password" value={state.password} onChange={handleChange} />
@@ -57,8 +53,7 @@ const Login = ({ onLogin }) => {
       </form>
 
       <div className="login__signup">
-        <p>Ещё не зарегистрированы?</p>
-        <Link to="/signup" className="signup__link">Регистрация</Link>
+        <Link to="/signup">Регистрация</Link>
       </div>
     </div>
   );

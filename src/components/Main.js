@@ -2,14 +2,17 @@ import React, { useContext } from "react";
 import Card from "./Card";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { CardsContext } from '../contexts/CardsContext';
+import { Link } from "react-router-dom";
 
-function Main({onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike, onCardDelete}) {
+function Main({onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike, onCardDelete, onUserData, onSignOut}) {
 
   const currentUser = useContext(CurrentUserContext);
   const cards = useContext(CardsContext);
 
   return (
     <main className="content">
+      <p>{onUserData.email}</p>
+      <Link to="/signin" onClick={onSignOut}>Выйти</Link>
     <section className="profile">
       <button type="button" className="profile__edit-avatar-btn button" onClick={onEditAvatar}>
         <img src={currentUser.avatar} alt={currentUser.name} className="profile__avatar" />
