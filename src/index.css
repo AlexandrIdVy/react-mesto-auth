@@ -7,9 +7,8 @@
 
 @import url(./blocks/header/header.css);
 @import url(./blocks/header/__logo/header__logo.css);
-@import url(./blocks/header/__auth/header__auth.css);
-@import url(./blocks/header/__email/header__email.css);
-@import url(./blocks/header/__email/_visible/header__email_visible.css);
+@import url(./blocks/header/__auth-list/header__auth-list.css);
+@import url(./blocks/header/__auth-item/header__auth-item.css);
 
 @import url(./blocks/content/content.css);
 
