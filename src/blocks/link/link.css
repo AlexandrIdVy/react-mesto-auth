@@ -1,0 +1,14 @@
+.link {
+  text-decoration: none;
+  transition: opacity .4s ease;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  color: #FFFFFF;
+}
+
+.link:hover {
+  opacity: 0.7;
+}

@@ -173,17 +173,31 @@ function App() {
 
   return (
     <div className="page">
-      <Header />
       <Switch>
         <Route path="/sign-up">
+          <Header
+          text={'Войти'}
+          userData={''}
+          loggedIn={loggedIn}
+          path={'/sign-in'} />
           <Register onRegister={handleRegister} />
           <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} onMessage={message} />
         </Route>
         <Route path="/sign-in">
+          <Header
+          text={'Регистрация'}
+          userData={''}
+          loggedIn={loggedIn}
+          path={'/sign-up'} />
           <Login onLogin={handleSignIn} />
           <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} onMessage={message} />
         </Route>
         <ProtectedRoute exact path="/" loggedIn={loggedIn}>
+          <Header
+          text={'Выйти'}
+          userData={userData}
+          loggedIn={loggedIn}
+          path={'/sign-in'} />
           <CurrentUserContext.Provider value={currentUser}>
             <CardsContext.Provider value={cards}>
               <Main
