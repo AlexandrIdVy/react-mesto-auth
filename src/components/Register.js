@@ -19,16 +19,9 @@ function Register({ onRegister }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const { password, email } = state;
+    const { password, email, message } = state;
 
-    onRegister(password, email)
-      .catch(err => {
-        console.log(err);
-        setState({
-          ...state,
-          message: 'Что-то пошло не так!'
-        })
-      });
+    onRegister(password, email, message);
   }
 
   return(
@@ -52,7 +45,7 @@ function Register({ onRegister }) {
       </form>
       <div className="register__signin">
         <p>Уже зарегистрированы?</p>
-        <Link to="/signin">Войти</Link>
+        <Link to="/sign-in">Войти</Link>
       </div>
     </div>
   );

@@ -16,17 +16,20 @@ import ProtectedRoute from './ProtectedRoute';
 import Login from './Login';
 import Register from './Register';
 import * as Auth from '../Auth.js';
+import InfoTooltip from './InfoTooltip';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
+  const [isInfoTooltip, setIsInfoTooltip] = useState(false);
   const [selectedCard, setSelectedCard] = useState({name: '', link: ''});
   const [currentUser, setСurrentUser] = useState({name: '', about: '', avatar: ''});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState({email: ''});
+  const [message, setMessage] = useState({message: ''});
 
   const history = useHistory();
 
@@ -71,6 +74,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setIsInfoTooltip(false);
     setSelectedCard({name: '', link: ''});
   }
 
@@ -131,7 +135,7 @@ function App() {
       .catch(err => console.log(err));
   }
 
-  function handleSignIn(password, email) {
+  function handleSignIn(password, email, message) {
     return Auth.authorize(password, email)
             .then((data) => {
               if (!data.token) throw new Error('Отсутсвует токен для входа');
@@ -139,30 +143,45 @@ function App() {
               localStorage.setItem('jwt', data.token);
               setLoggedIn(true);
               history.push("/");
+            })
+            .catch(err => {
+              console.log(err);
+              setIsInfoTooltip(true);
+              setMessage({message: 'Что-то пошло не так!'});
             });
   }
 
-  function handleRegister(password, email) {
-    return Auth.register(password, email).then(() => {
-      history.push("/signin");
-    });
+  function handleRegister(password, email, message) {
+    return Auth.register(password, email)
+            .then(() => {
+            history.push("/sign-in");
+            setIsInfoTooltip(true);
+            setMessage({message: 'Вы успешно зарегистрировались!'});
+            })
+            .catch(err => {
+              console.log(err);
+              setIsInfoTooltip(true);
+              setMessage({message: 'Что-то пошло не так!'});
+            });
   }
 
   function handleSignOut() {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
-    history.push("/signin");
+    history.push("/sign-in");
   }
 
   return (
     <div className="page">
       <Header />
       <Switch>
-        <Route path="/signup">
+        <Route path="/sign-up">
           <Register onRegister={handleRegister} />
+          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} onMessage={message} />
         </Route>
-        <Route path="/signin">
+        <Route path="/sign-in">
           <Login onLogin={handleSignIn} />
+          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} onMessage={message} />
         </Route>
         <ProtectedRoute exact path="/" loggedIn={loggedIn}>
           <CurrentUserContext.Provider value={currentUser}>

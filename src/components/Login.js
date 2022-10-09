@@ -19,18 +19,11 @@ function Login({ onLogin }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const { password, email } = state;
+    const { password, email, message } = state;
 
     if (!password || !email) return;
 
-    onLogin(password, email)
-      .catch(err => {
-        console.log(err);
-        setState({
-          ...state,
-          message: 'Что-то пошло не так!'
-        })
-      });
+    onLogin(password, email, message);
   }
 
   return(
@@ -53,7 +46,7 @@ function Login({ onLogin }) {
       </form>
 
       <div className="login__signup">
-        <Link to="/signup">Регистрация</Link>
+        <Link to="/sign-up">Регистрация</Link>
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ function Main({onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike,
   return (
     <main className="content">
       <p>{onUserData.email}</p>
-      <Link to="/signin" onClick={onSignOut}>Выйти</Link>
+      <Link to="/sign-in" onClick={onSignOut}>Выйти</Link>
     <section className="profile">
       <button type="button" className="profile__edit-avatar-btn button" onClick={onEditAvatar}>
         <img src={currentUser.avatar} alt={currentUser.name} className="profile__avatar" />
