@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-function Register({ onRegister }) {
+function Register({ onRegister, name, buttonText }) {
 
   const [state, setState] = useState({
     email: '',
@@ -25,29 +25,37 @@ function Register({ onRegister }) {
   }
 
   return(
-    <div className="register">
-
-      <p className="register__error">
-        {state.message}
-      </p>
-      <form onSubmit={handleSubmit} className="register__form">
-        <label htmlFor="email">
-          Email:
+    <main className="auth">
+      <h2 className="auth__title">Регистрация</h2>
+      <form name={name} className={`popup__form popup__form_type_${name}`} onSubmit={handleSubmit}>
+        <label className="popup__fieldset">
+          <input type="email"
+          className="popup__form-input popup__form-input_type_email"
+          id="email"
+          placeholder="Email"
+          name="email"
+          required
+          value={state.email}
+          onChange={handleChange}
+          />
+          <span className="popup__form-input-error email-error"></span>
         </label>
-        <input id="email" name="email" type="email" value={state.email} onChange={handleChange} />
-        <label htmlFor="password">
-          Пароль:
+        <label className="popup__fieldset">
+          <input type="password"
+          className="popup__form-input popup__form-input_type_password"
+          id="password"
+          name="password"
+          placeholder="Пароль"
+          required
+          value={state.password}
+          onChange={handleChange}
+          />
+          <span className="popup__form-input-error password-error"></span>
         </label>
-        <input id="password" name="password" type="password" value={state.password} onChange={handleChange} />
-        <div className="register__button-container">
-          <button type="submit" className="register__link">Зарегистрироваться</button>
-        </div>
+        <button type="submit" className="popup__form-confirm-btn button button_type_auth">{buttonText}</button>
       </form>
-      <div className="register__signin">
-        <p>Уже зарегистрированы?</p>
-        <Link to="/sign-in">Войти</Link>
-      </div>
-    </div>
+      <p className="auth__subtitle">Уже зарегистрированы? <Link to="/sign-in" className="auth__link link">Войти</Link></p>
+    </main>
   );
 }
 

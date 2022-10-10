@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
-function Login({ onLogin }) {
+function Login({ onLogin, name, buttonText }) {
 
   const [state, setState] = useState({
     email: '',
@@ -27,28 +26,36 @@ function Login({ onLogin }) {
   }
 
   return(
-    <div onSubmit={handleSubmit} className="login">
-      <p className="login__error">
-        {state.message}
-      </p>
-      <form className="login__form">
-        <label htmlFor="email">
-          Email:
+    <main className="auth">
+      <h2 className="auth__title">Вход</h2>
+      <form name={name} className={`popup__form popup__form_type_${name}`} onSubmit={handleSubmit}>
+        <label className="popup__fieldset">
+          <input type="email"
+          className="popup__form-input popup__form-input_type_email"
+          id="email"
+          placeholder="Email"
+          name="email"
+          required
+          value={state.email}
+          onChange={handleChange}
+          />
+          <span className="popup__form-input-error email-error"></span>
         </label>
-        <input id="email" required name="email" type="email" value={state.email} onChange={handleChange} />
-        <label htmlFor="password">
-          Пароль:
+        <label className="popup__fieldset">
+          <input type="password"
+          className="popup__form-input popup__form-input_type_password"
+          id="password"
+          name="password"
+          placeholder="Пароль"
+          required
+          value={state.password}
+          onChange={handleChange}
+          />
+          <span className="popup__form-input-error password-error"></span>
         </label>
-        <input id="password" required name="password" type="password" value={state.password} onChange={handleChange} />
-        <div className="login__button-container">
-          <button type="submit" className="login__link">Войти</button>
-        </div>
+        <button type="submit" className="popup__form-confirm-btn button button_type_auth">{buttonText}</button>
       </form>
-
-      <div className="login__signup">
-        <Link to="/sign-up">Регистрация</Link>
-      </div>
-    </div>
+    </main>
   );
 }
 

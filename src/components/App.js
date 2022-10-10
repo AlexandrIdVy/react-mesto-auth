@@ -15,7 +15,7 @@ import AddPlacePopup from './AddPlacePopup';
 import ProtectedRoute from './ProtectedRoute';
 import Login from './Login';
 import Register from './Register';
-import * as Auth from '../Auth.js';
+import * as Auth from '../utils/Auth.js';
 import InfoTooltip from './InfoTooltip';
 
 function App() {
@@ -176,28 +176,42 @@ function App() {
       <Switch>
         <Route path="/sign-up">
           <Header
-          text={'Войти'}
-          userData={''}
-          loggedIn={loggedIn}
-          path={'/sign-in'} />
-          <Register onRegister={handleRegister} />
+            text={'Войти'}
+            userData={''}
+            loggedIn={loggedIn}
+            path={'/sign-in'}
+            onSignOut={''}
+          />
+          <Register
+            onRegister={handleRegister}
+            name={'register'}
+            buttonText={'Зарегистрироваться'}
+           />
           <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} onMessage={message} />
         </Route>
         <Route path="/sign-in">
           <Header
-          text={'Регистрация'}
-          userData={''}
-          loggedIn={loggedIn}
-          path={'/sign-up'} />
-          <Login onLogin={handleSignIn} />
+            text={'Регистрация'}
+            userData={''}
+            loggedIn={loggedIn}
+            path={'/sign-up'}
+            onSignOut={''}
+          />
+          <Login
+            onLogin={handleSignIn}
+            name={'login'}
+            buttonText={'Войти'}
+          />
           <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} onMessage={message} />
         </Route>
         <ProtectedRoute exact path="/" loggedIn={loggedIn}>
           <Header
-          text={'Выйти'}
-          userData={userData}
-          loggedIn={loggedIn}
-          path={'/sign-in'} />
+            text={'Выйти'}
+            userData={userData}
+            loggedIn={loggedIn}
+            path={'/sign-in'}
+            onSignOut={handleSignOut}
+          />
           <CurrentUserContext.Provider value={currentUser}>
             <CardsContext.Provider value={cards}>
               <Main
@@ -207,8 +221,6 @@ function App() {
                 onCardClick={handleCardClick}
                 onCardLike={handleCardLike}
                 onCardDelete={handleCardDelete}
-                onUserData={userData}
-                onSignOut={handleSignOut}
               />
 
           <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
