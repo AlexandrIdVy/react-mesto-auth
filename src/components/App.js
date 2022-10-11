@@ -17,6 +17,8 @@ import Login from './Login';
 import Register from './Register';
 import * as Auth from '../utils/Auth.js';
 import InfoTooltip from './InfoTooltip';
+import UnionV from '../images/UnionV.svg';
+import UnionX from '../images/UnionX.svg';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -29,7 +31,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState({email: ''});
-  const [message, setMessage] = useState({message: ''});
+  const [message, setMessage] = useState({message: '', union: ''});
 
   const history = useHistory();
 
@@ -135,7 +137,7 @@ function App() {
       .catch(err => console.log(err));
   }
 
-  function handleSignIn(password, email, message) {
+  function handleSignIn(password, email) {
     return Auth.authorize(password, email)
             .then((data) => {
               if (!data.token) throw new Error('Отсутсвует токен для входа');
@@ -147,21 +149,21 @@ function App() {
             .catch(err => {
               console.log(err);
               setIsInfoTooltip(true);
-              setMessage({message: 'Что-то пошло не так!'});
+              setMessage({message: 'Что-то пошло не так! Попробуйте еще раз.', union: UnionV});
             });
   }
 
-  function handleRegister(password, email, message) {
+  function handleRegister(password, email) {
     return Auth.register(password, email)
             .then(() => {
             history.push("/sign-in");
             setIsInfoTooltip(true);
-            setMessage({message: 'Вы успешно зарегистрировались!'});
+            setMessage({message: 'Вы успешно зарегистрировались!', union: UnionV});
             })
             .catch(err => {
               console.log(err);
               setIsInfoTooltip(true);
-              setMessage({message: 'Что-то пошло не так!'});
+              setMessage({message: 'Что-то пошло не так! Попробуйте еще раз.', union: UnionX});
             });
   }
 
@@ -180,7 +182,6 @@ function App() {
             userData={''}
             loggedIn={loggedIn}
             path={'/sign-in'}
-            onSignOut={''}
           />
           <Register
             onRegister={handleRegister}
@@ -195,7 +196,6 @@ function App() {
             userData={''}
             loggedIn={loggedIn}
             path={'/sign-up'}
-            onSignOut={''}
           />
           <Login
             onLogin={handleSignIn}

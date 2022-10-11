@@ -4,8 +4,7 @@ function Login({ onLogin, name, buttonText }) {
 
   const [state, setState] = useState({
     email: '',
-    password: '',
-    message: ''
+    password: ''
   });
 
   function handleChange(e) {
@@ -18,11 +17,11 @@ function Login({ onLogin, name, buttonText }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const { password, email, message } = state;
+    const { password, email } = state;
 
     if (!password || !email) return;
 
-    onLogin(password, email, message);
+    onLogin(password, email);
   }
 
   return(

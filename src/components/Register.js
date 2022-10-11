@@ -5,8 +5,7 @@ function Register({ onRegister, name, buttonText }) {
 
   const [state, setState] = useState({
     email: '',
-    password: '',
-    message: ''
+    password: ''
   });
 
   function handleChange(e) {
@@ -19,9 +18,9 @@ function Register({ onRegister, name, buttonText }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const { password, email, message } = state;
+    const { password, email } = state;
 
-    onRegister(password, email, message);
+    onRegister(password, email);
   }
 
   return(
