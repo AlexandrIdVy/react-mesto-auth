@@ -40,11 +40,13 @@ function App() {
 
       if (!jwt) return;
 
-      Auth.getContent(jwt).then((data) => {
-        setLoggedIn(true);
-        setUserData({email: data.data.email});
-        history.push("/")
-      });
+      Auth.getContent(jwt)
+        .then((data) => {
+          setLoggedIn(true);
+          setUserData({email: data.data.email});
+          history.push("/")
+        })
+        .catch(err => console.log(err));
   }, [history]);
 
   useEffect(() => {
@@ -53,7 +55,7 @@ function App() {
         setСurrentUser(dataUser);
         setCards(dataCards);
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
   }, []);
 
   function handleEditAvatarClick() {
@@ -157,14 +159,13 @@ function App() {
     return Auth.register(password, email)
             .then(() => {
             history.push("/sign-in");
-            setIsInfoTooltip(true);
             setMessage({message: 'Вы успешно зарегистрировались!', union: UnionV});
             })
             .catch(err => {
               console.log(err);
-              setIsInfoTooltip(true);
               setMessage({message: 'Что-то пошло не так! Попробуйте еще раз.', union: UnionX});
-            });
+            })
+            .finally(() => setIsInfoTooltip(true));
   }
 
   function handleSignOut() {

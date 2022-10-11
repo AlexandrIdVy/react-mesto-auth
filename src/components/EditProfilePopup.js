@@ -12,10 +12,11 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
 
   // После загрузки текущего пользователя из API
   // его данные будут использованы в управляемых компонентах.
+  // следим за isOpen
   useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about);
-  }, [currentUser]);
+  }, [currentUser, isOpen]);
 
   function handleSubmit(e) {
     // Запрещаем браузеру переходить по адресу формы
