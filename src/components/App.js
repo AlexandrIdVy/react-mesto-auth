@@ -47,7 +47,7 @@ function App() {
           history.push("/")
         })
         .catch(err => console.log(err));
-  }, [history]);
+  }, [history, loggedIn]);
 
   useEffect(() => {
     Promise.all([api.getUserMe(), api.getInitialCards()])
