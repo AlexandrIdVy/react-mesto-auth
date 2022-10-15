@@ -21,6 +21,9 @@
   * use.State
   * use.Effect
   * Promise API
+  * React.createContext
+  * useHistory
+  * BrowserRouter
 
 
 [RU](#Место) **[EN](#Mesto)**
@@ -46,3 +49,6 @@ A social network profile page with photos of explored places in Russia.
   * use.State
   * use.Effect
   * Promise API
+  * React.createContext
+  * useHistory
+  * BrowserRouter
